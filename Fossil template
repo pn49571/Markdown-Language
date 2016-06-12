@@ -1,0 +1,63 @@
+<h1 style="text-align: center;" markdown="1" >DHCP configuration</h1>
+<div>
+<h2>For server side :</h2>
+<ol>
+<li>install the DHCP-server package</li>
+<pre><code>apt-get install isc-dhcp-server</code></pre>
+<li>Configure the files</li>
+   + change the /etc/default/isc-dhcp-server to the read the ethernet
+     <pre><code>INTERFACES=eth0</code></pre>
+   + change the /etc/dhcp/dhcpd.conf for declaring the subnet and the Ip-adress for the client machine 
+     <pre><code>DHCPDARGS=eth0;
+authoritative;
+ddns-update-style none;
+option domain-name "healthit.lab";
+subnet 192.168.1.0 netmask 255.255.255.0 {
+       range 192.168.1.1 192.168.1.13;
+       option subnet-mask 255.255.255.0;
+       option broadcast-address 192.168.1.255;
+}
+host sun {
+    hardware ethernet 78:45:c4:3d:99:da;
+    fixed-address 192.168.1.1;
+}
+host mercury {
+     hardware ethernet 6c:0b:84:a4:ad:4f;
+     fixed-address 192.168.1.4;
+}
+</code></pre>
+   + change the /etc/network/interfaces to the assign a static ip address to the machine 
+<pre><code>auto eth0
+iface eth0 
+inet static
+address 192.168.1.1
+netmask 255.255.255.0</code></pre>
+
+<li>Restart the network using the command below :</li>
+<pre><code>systemctl restart networking or 
+ifdown eth0 or 
+ifup eth0</code></pre>
+</ol> 
+</div>
+<HR WIDTH="100%" COLOR="#FF0000" SIZE="4">
+<div>
+<h2>For Client side :</h2>
+<ol>
+<li>install the DHCP-client package</li>
+<pre><code>apt-get install dhcp-client</code></pre>
+<li>Configure the files</li>
+   + change the /etc/network/interfaces to the assign pickup the DHCP ip address to the machine 
+<pre><code>auto eth0
+iface eth0 inet dhcp</code></pre>
+
+<li>Restart the network using the command below :</li>
+<pre><code>systemctl restart networking or 
+ifdown eth0 or 
+ifup eth0</code></pre>
+</ol> 
+</div>
+<hr>
+<footer>
+  <p>Author: Saiadithya Cumbulam Thangaraj<br>
+<sup>This material is confidential and may not be copied, used or distributed without the written permission of Health-IT Lab</sup></p>
+</footer>
